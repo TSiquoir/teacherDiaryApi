@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -18,7 +20,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 
@@ -29,9 +31,56 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string, nullable=true")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $last_name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $first_name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pseudo;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $date_of_birth;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $days = [];
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Timetable", mappedBy="user")
+     */
+    private $timetables;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserSubject", mappedBy="user")
+     */
+    private $userSubjects;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\NotebookTask", mappedBy="user")
+     */
+    private $notebookTasks;
+
+    public function __construct()
+    {
+        $this->timetables = new ArrayCollection();
+        $this->userSubjects = new ArrayCollection();
+        $this->notebookTasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -109,5 +158,158 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(string $last_name): self
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
+
+    public function setFirstName(string $first_name): self
+    {
+        $this->first_name = $first_name;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeInterface
+    {
+        return $this->date_of_birth;
+    }
+
+    public function setDateOfBirth(?\DateTimeInterface $date_of_birth): self
+    {
+        $this->date_of_birth = $date_of_birth;
+
+        return $this;
+    }
+
+    public function getDays(): ?array
+    {
+        return $this->days;
+    }
+
+    public function setDays(array $days): self
+    {
+        $this->days = $days;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Timetable[]
+     */
+    public function getTimetables(): Collection
+    {
+        return $this->timetables;
+    }
+
+    public function addTimetable(Timetable $timetable): self
+    {
+        if (!$this->timetables->contains($timetable)) {
+            $this->timetables[] = $timetable;
+            $timetable->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimetable(Timetable $timetable): self
+    {
+        if ($this->timetables->contains($timetable)) {
+            $this->timetables->removeElement($timetable);
+            // set the owning side to null (unless already changed)
+            if ($timetable->getUser() === $this) {
+                $timetable->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserSubject[]
+     */
+    public function getUserSubjects(): Collection
+    {
+        return $this->userSubjects;
+    }
+
+    public function addUserSubject(UserSubject $userSubject): self
+    {
+        if (!$this->userSubjects->contains($userSubject)) {
+            $this->userSubjects[] = $userSubject;
+            $userSubject->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserSubject(UserSubject $userSubject): self
+    {
+        if ($this->userSubjects->contains($userSubject)) {
+            $this->userSubjects->removeElement($userSubject);
+            // set the owning side to null (unless already changed)
+            if ($userSubject->getUser() === $this) {
+                $userSubject->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|NotebookTask[]
+     */
+    public function getNotebookTasks(): Collection
+    {
+        return $this->notebookTasks;
+    }
+
+    public function addNotebookTask(NotebookTask $notebookTask): self
+    {
+        if (!$this->notebookTasks->contains($notebookTask)) {
+            $this->notebookTasks[] = $notebookTask;
+            $notebookTask->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotebookTask(NotebookTask $notebookTask): self
+    {
+        if ($this->notebookTasks->contains($notebookTask)) {
+            $this->notebookTasks->removeElement($notebookTask);
+            // set the owning side to null (unless already changed)
+            if ($notebookTask->getUser() === $this) {
+                $notebookTask->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

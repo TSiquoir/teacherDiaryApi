@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\TimetableRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\UserSubjectRepository")
  */
-class Timetable
+class UserSubject
 {
     /**
      * @ORM\Id()
@@ -24,28 +24,29 @@ class Timetable
     private $name;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="string", length=255)
      */
-    private $time_start;
+    private $color;
 
     /**
-     * @ORM\Column(type="time")
-     */
-    private $time_end;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="timetables")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userSubjects")
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TimetableTask", mappedBy="timetable")
+     * @ORM\OneToMany(targetEntity="App\Entity\TimetableTask", mappedBy="subject")
      */
     private $timetableTasks;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\NotebookTask", mappedBy="subject")
+     */
+    private $notebookTasks;
 
     public function __construct()
     {
         $this->timetableTasks = new ArrayCollection();
+        $this->notebookTasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -65,26 +66,14 @@ class Timetable
         return $this;
     }
 
-    public function getTimeStart(): ?\DateTimeInterface
+    public function getColor(): ?string
     {
-        return $this->time_start;
+        return $this->color;
     }
 
-    public function setTimeStart(\DateTimeInterface $time_start): self
+    public function setColor(string $color): self
     {
-        $this->time_start = $time_start;
-
-        return $this;
-    }
-
-    public function getTimeEnd(): ?\DateTimeInterface
-    {
-        return $this->time_end;
-    }
-
-    public function setTimeEnd(\DateTimeInterface $time_end): self
-    {
-        $this->time_end = $time_end;
+        $this->color = $color;
 
         return $this;
     }
@@ -113,7 +102,7 @@ class Timetable
     {
         if (!$this->timetableTasks->contains($timetableTask)) {
             $this->timetableTasks[] = $timetableTask;
-            $timetableTask->setTimetable($this);
+            $timetableTask->setSubject($this);
         }
 
         return $this;
@@ -124,8 +113,39 @@ class Timetable
         if ($this->timetableTasks->contains($timetableTask)) {
             $this->timetableTasks->removeElement($timetableTask);
             // set the owning side to null (unless already changed)
-            if ($timetableTask->getTimetable() === $this) {
-                $timetableTask->setTimetable(null);
+            if ($timetableTask->getSubject() === $this) {
+                $timetableTask->setSubject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|NotebookTask[]
+     */
+    public function getNotebookTasks(): Collection
+    {
+        return $this->notebookTasks;
+    }
+
+    public function addNotebookTask(NotebookTask $notebookTask): self
+    {
+        if (!$this->notebookTasks->contains($notebookTask)) {
+            $this->notebookTasks[] = $notebookTask;
+            $notebookTask->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotebookTask(NotebookTask $notebookTask): self
+    {
+        if ($this->notebookTasks->contains($notebookTask)) {
+            $this->notebookTasks->removeElement($notebookTask);
+            // set the owning side to null (unless already changed)
+            if ($notebookTask->getSubject() === $this) {
+                $notebookTask->setSubject(null);
             }
         }
 
