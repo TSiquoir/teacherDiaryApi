@@ -31,17 +31,17 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string, nullable=true")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $last_name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $first_name;
 
@@ -74,6 +74,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\NotebookTask", mappedBy="user")
      */
     private $notebookTasks;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $google;
 
     public function __construct()
     {
@@ -309,6 +314,18 @@ class User implements UserInterface
                 $notebookTask->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGoogle(): ?string
+    {
+        return $this->google;
+    }
+
+    public function setGoogle(?string $google): self
+    {
+        $this->google = $google;
 
         return $this;
     }

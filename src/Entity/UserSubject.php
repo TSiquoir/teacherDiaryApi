@@ -43,6 +43,7 @@ class UserSubject
      */
     private $notebookTasks;
 
+
     public function __construct()
     {
         $this->timetableTasks = new ArrayCollection();
@@ -151,4 +152,6 @@ class UserSubject
 
         return $this;
     }
+
+   
 }
