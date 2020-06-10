@@ -21,11 +21,6 @@ class NotebookSkill
      */
     private $name;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NotebookTask", cascade={"persist", "remove"})
-     */
-    private $task;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -39,18 +34,6 @@ class NotebookSkill
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getTask(): ?NotebookTask
-    {
-        return $this->task;
-    }
-
-    public function setTask(?NotebookTask $task): self
-    {
-        $this->task = $task;
 
         return $this;
     }

@@ -66,11 +66,6 @@ class User implements UserInterface
     private $timetables;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserSubject", mappedBy="user")
-     */
-    private $userSubjects;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\NotebookTask", mappedBy="user")
      */
     private $notebookTasks;
@@ -83,7 +78,6 @@ class User implements UserInterface
     public function __construct()
     {
         $this->timetables = new ArrayCollection();
-        $this->userSubjects = new ArrayCollection();
         $this->notebookTasks = new ArrayCollection();
     }
 
@@ -250,37 +244,6 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($timetable->getUser() === $this) {
                 $timetable->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|UserSubject[]
-     */
-    public function getUserSubjects(): Collection
-    {
-        return $this->userSubjects;
-    }
-
-    public function addUserSubject(UserSubject $userSubject): self
-    {
-        if (!$this->userSubjects->contains($userSubject)) {
-            $this->userSubjects[] = $userSubject;
-            $userSubject->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserSubject(UserSubject $userSubject): self
-    {
-        if ($this->userSubjects->contains($userSubject)) {
-            $this->userSubjects->removeElement($userSubject);
-            // set the owning side to null (unless already changed)
-            if ($userSubject->getUser() === $this) {
-                $userSubject->setUser(null);
             }
         }
 

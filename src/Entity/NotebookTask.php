@@ -32,7 +32,7 @@ class NotebookTask
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\UserSubject", inversedBy="notebookTasks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Subject", inversedBy="notebookTasks")
      */
     private $subject;
 
@@ -82,12 +82,12 @@ class NotebookTask
         return $this;
     }
 
-    public function getSubject(): ?UserSubject
+    public function getSubject(): ?Subject
     {
         return $this->subject;
     }
 
-    public function setSubject(?UserSubject $subject): self
+    public function setSubject(?Subject $subject): self
     {
         $this->subject = $subject;
 

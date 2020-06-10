@@ -42,7 +42,7 @@ class TimetableTask
     private $timetable;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\UserSubject", inversedBy="timetableTasks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Subject", inversedBy="timetableTasks")
      */
     private $subject;
 
@@ -111,12 +111,12 @@ class TimetableTask
         return $this;
     }
 
-    public function getSubject(): ?UserSubject
+    public function getSubject(): ?Subject
     {
         return $this->subject;
     }
 
-    public function setSubject(?UserSubject $subject): self
+    public function setSubject(?Subject $subject): self
     {
         $this->subject = $subject;
 
