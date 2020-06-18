@@ -28,5 +28,6 @@ services:
 
     App\EventListener\ApiListener:
         tags:
+            - { name: kernel.event_listener, event: kernel.exception }
             - { name: kernel.event_listener, event: kernel.request }
             - { name: kernel.event_listener, event: kernel.response }
