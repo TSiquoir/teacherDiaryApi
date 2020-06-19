@@ -22,7 +22,8 @@ class NotebookGoal
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\NotebookTask", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=NotebookTask::class, inversedBy="goals")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $task;
 

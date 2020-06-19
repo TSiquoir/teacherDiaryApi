@@ -21,6 +21,12 @@ class NotebookSkill
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=NotebookTask::class, inversedBy="skills")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $task;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -34,6 +40,18 @@ class NotebookSkill
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTask(): ?NotebookTask
+    {
+        return $this->task;
+    }
+
+    public function setTask(?NotebookTask $task): self
+    {
+        $this->task = $task;
 
         return $this;
     }
